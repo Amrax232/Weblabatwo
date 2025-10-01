@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Факультеты и институты - Московский Политех</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', 'Inter', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .logo-img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--accent);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 120px 0 60px;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .breadcrumb a {
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        /* Faculties Content */
+        .faculties-content {
+            padding: 80px 0;
+        }
+
+        .faculties-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .faculties-intro h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .faculties-intro p {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            line-height: 1.8;
+        }
+
+        /* Search and Filter */
+        .search-filter {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-tag {
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-tag.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Faculties Grid */
+        .faculties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .faculty-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .faculty-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .faculty-content {
+            padding: 2rem;
+        }
+
+        .faculty-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .faculty-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--secondary);
+        }
+
+        .faculty-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .faculty-description {
+            color: var(--secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .faculty-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s;
+        }
+
+        .faculty-link:hover {
+            gap: 0.75rem;
+        }
+
+        /* Departments Section */
+        .departments {
+            background: var(--light);
+            padding: 4rem 0;
+            border-radius: 16px;
+            margin: 4rem 0;
+        }
+
+        .departments h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .department-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .department-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .department-item h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .department-item p {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Admission Info */
+        .admission-info {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .admission-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .admission-info p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 60px 0 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .footer-section a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .faculties-intro h2 {
+                font-size: 2rem;
+            }
+            
+            .faculties-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .filter-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1rem;
+            }
+            
+            .logo-img {
+                height: 35px;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .faculty-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .admission-info {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpg" alt="Московский Политех" class="logo-img">
+                    Московский Политех
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О вузе</a></li>
+                    <li><a href="faculties.html" class="active">Факультеты</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="auth.html" class="btn">Войти</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Главная</a>
+                <span>→</span>
+                <span>Факультеты и институты</span>
+            </div>
+            <h1>Факультеты и институты</h1>
+        </div>
+    </section>
+
+    <!-- Faculties Content -->
+    <section class="faculties-content">
+        <div class="container">
+            <div class="faculties-intro">
+                <h2>Образовательные подразделения</h2>
+                <p>Московский Политех предлагает широкий спектр образовательных программ 
+                через свои факультеты и институты. Выберите интересующее вас направление 
+                для получения подробной информации.</p>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Поиск факультета или направления...">
+                    <button class="btn">Найти</button>
+                </div>
+                <div class="filter-tags">
+                    <div class="filter-tag active">Все</div>
+                    <div class="filter-tag">Технические</div>
+                    <div class="filter-tag">IT</div>
+                    <div class="filter-tag">Экономические</div>
+                    <div class="filter-tag">Гуманитарные</div>
+                </div>
+            </div>
+
+            <!-- Faculties Grid -->
+            <div class="faculties-grid">
+                <!-- Факультет 1 -->
+                <div class="faculty-card">
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=600&q=80" alt="Машиностроение" class="faculty-image">
+                    <div class="faculty-content">
+                        <h3>Машиностроительный факультет</h3>
+                        <div class="faculty-stats">
+                            <div class="faculty-stat">🎓 1200 студентов</div>
+                            <div class="faculty-stat">📚 15 программ</div>
+                        </div>
+                        <p class="faculty-description">Подготовка инженеров для автомобильной, 
+                        аэрокосмической и других отраслей промышленности. Современные лаборатории 
+                        и проектный подход к обучению.</p>
+                        <a href="#" class="faculty-link">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Факультет 2 -->
+                <div class="faculty-card">
+                    <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?auto=format&fit=crop&w=600&q=80" alt="Информационные технологии" class="faculty-image">
+                    <div class="faculty-content">
+                        <h3>Факультет информационных технологий</h3>
+                        <div class="faculty-stats">
+                            <div class="faculty-stat">🎓 1800 студентов</div>
+                            <div class="faculty-stat">📚 22 программы</div>
+                        </div>
+                        <p class="faculty-description">Программы по разработке ПО, искусственному 
+                        интеллекту, кибербезопасности и data science. Тесное сотрудничество 
+                        с IT-компаниями.</p>
+                        <a href="#" class="faculty-link">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Факультет 3 -->
+                <div class="faculty-card">
+                    <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=600&q=80" alt="Энергетика" class="faculty-image">
+                    <div class="faculty-content">
+                        <h3>Энергетический институт</h3>
+                        <div class="faculty-stats">
+                            <div class="faculty-stat">🎓 900 студентов</div>
+                            <div class="faculty-stat">📚 12 программ</div>
+                        </div>
+                        <p class="faculty-description">Подготовка специалистов в области традиционной 
+                        и возобновляемой энергетики. Исследования в области энергоэффективности 
+                        и smart grid.</p>
+                        <a href="#" class="faculty-link">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Факультет 4 -->
+                <div class="faculty-card">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Химические технологии" class="faculty-image">
+                    <div class="faculty-content">
+                        <h3>Институт химических технологий</h3>
+                        <div class="faculty-stats">
+                            <div class="faculty-stat">🎓 750 студентов</div>
+                            <div class="faculty-stat">📚 10 программ</div>
+                        </div>
+                        <p class="faculty-description">Современные исследования в области 
+                        химической технологии, наноматериалов и биотехнологий. Оснащенные 
+                        лаборатории и научные центры.</p>
+                        <a href="#" class="faculty-link">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Факультет 5 -->
+                <div class="faculty-card">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80" alt="Экономика" class="faculty-image">
+                    <div class="faculty-content">
+                        <h3>Экономический факультет</h3>
+                        <div class="faculty-stats">
+                            <div class="faculty-stat">🎓 1100 студентов</div>
+                            <div class="faculty-stat">📚 8 программ</div>
+                        </div>
+                        <p class="faculty-description">Подготовка экономистов, менеджеров 
+                        и аналитиков для промышленных предприятий. Современные подходы 
+                        к управлению и анализу данных.</p>
+                        <a href="#" class="faculty-link">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Факультет 6 -->
+                <div class="faculty-card">
+                    <img src="https://images.unsplash.com/photo-1581093458791-8a6b6645cac5?auto=format&fit=crop&w=600&q=80" alt="Транспорт" class="faculty-image">
+                    <div class="faculty-content">
+                        <h3>Транспортный институт</h3>
+                        <div class="faculty-stats">
+                            <div class="faculty-stat">🎓 800 студентов</div>
+                            <div class="faculty-stat">📚 9 программ</div>
+                        </div>
+                        <p class="faculty-description">Разработка интеллектуальных транспортных 
+                        систем, логистика и управление транспортными потоками. Практика 
+                        на ведущих транспортных предприятиях.</p>
+                        <a href="#" class="faculty-link">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Departments Section -->
+            <div class="departments">
+                <h2>Кафедры и научные центры</h2>
+                <div class="departments-grid">
+                    <div class="department-item">
+                        <h4>Кафедра автоматизации</h4>
+                        <p>Системы автоматического управления и промышленная автоматика</p>
+                    </div>
+                    <div class="department-item">
+                        <h4>Кафедра робототехники</h4>
+                        <p>Разработка роботизированных систем и мехатроника</p>
+                    </div>
+                    <div class="department-item">
+                        <h4>Кафедра программирования</h4>
+                        <p>Разработка программного обеспечения и алгоритмы</p>
+                    </div>
+                    <div class="department-item">
+                        <h4>Кафедра искусственного интеллекта</h4>
+                        <p>Машинное обучение и нейронные сети</p>
+                    </div>
+                    <div class="department-item">
+                        <h4>Кафедра энергетики</h4>
+                        <p>Возобновляемые источники энергии и smart grid</p>
+                    </div>
+                    <div class="department-item">
+                        <h4>Научный центр материаловедения</h4>
+                        <p>Исследование новых материалов и нанотехнологий</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admission Info -->
+            <div class="admission-info">
+                <h2>Поступление 2024</h2>
+                <p>Узнайте больше о правилах приема, вступительных испытаниях 
+                и сроках подачи документов. Наши консультанты помогут вам 
+                выбрать подходящее направление подготовки.</p>
+                <a href="contacts.html" class="btn">Узнать о поступлении</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <p>📞 +7 (495) 223-05-23</p>
+                    <p>✉️ info@mospolytech.ru</p>
+                    <p>📍 Москва, ул. Большая Семеновская, 38</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Быстрые ссылки</h3>
+                    <p><a href="index.html">Главная</a></p>
+                    <p><a href="about.html">О вузе</a></p>
+                    <p><a href="faculties.html">Факультеты</a></p>
+                    <p><a href="contacts.html">Контакты</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Социальные сети</h3>
+                    <p><a href="https://vk.com/moscowpolytech">ВКонтакте</a></p>
+                    <p><a href="https://t.me/mospolytech">Telegram</a></p>
+                    <p><a href="https://www.youtube.com/channel/UCJMY2ilUHti99R6ii2PIIYA/videos">YouTube</a></p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Московский Политехнический Университет. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Простой поиск и фильтрация
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            const filterTags = document.querySelectorAll('.filter-tag');
+            const facultyCards = document.querySelectorAll('.faculty-card');
+
+            // Поиск
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                facultyCards.forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    const description = card.querySelector('.faculty-description').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Фильтрация
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // Убираем активный класс у всех тегов
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    // Добавляем активный класс к текущему тегу
+                    this.classList.add('active');
+                    
+                    const filterValue = this.textContent.toLowerCase();
+                    
+                    facultyCards.forEach(card => {
+                        if (filterValue === 'все') {
+                            card.style.display = 'block';
+                        } else {
+                            const title = card.querySelector('h3').textContent.toLowerCase();
+                            const description = card.querySelector('.faculty-description').textContent.toLowerCase();
+                            
+                            if (title.includes(filterValue) || description.includes(filterValue)) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
